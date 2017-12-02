@@ -1,0 +1,107 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Main extends JPanel {
+	private JButton t;
+
+	private static JFrame frame;
+	private static int q = 0;
+
+	private BufferedImage rick;
+
+	public Main() throws Exception {
+		rick = ImageIO.read(Main.class.getResource("newest.png"));
+	}
+
+	public static void create() throws Exception {
+		frame = new JFrame();
+		frame.setTitle("That Game");
+		frame.getContentPane().setPreferredSize(new Dimension(900, 900));
+		frame.setLocationRelativeTo(null);
+		frame.setLocation(200, 20);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(new Main());
+		frame.setResizable(false);
+		frame.setVisible(true);
+		frame.pack();
+		playSound("ughhh.wav");
+		while (true) {
+			frame.repaint();
+			try {
+				Thread.sleep(1000 / 60);
+				q++;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+		
+	
+
+	@Override
+	public void paint(Graphics g) {
+
+		for (int i = 0; i <= 800; i += 100) {
+			for (int o = 0; o <= 800; o += 100) {
+				
+				if ((((int)(Math.random() * 254)) % 2) == 0) {
+					g.setColor(new Color(((int) (Math.random() * 255)), (int) (Math.random() * 255),
+							(int) (Math.random() * 255)));
+					g.fillRect(i, o, 100, 100);
+					t = new JButton("hi");
+					t.setBounds(i, o, 100, 100);
+				}
+			}
+		}
+
+		{
+		
+		g.drawImage(rick, 0, 0, 100, 100, null);
+
+		g.setColor(new Color(((int) (Math.random() * 255)), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+		g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+		g.drawString("  Hi, my name is", 100, 100);
+		g.drawString("     Rick Astley.", 100, 200);
+		g.drawString("  My face is on a ", 100, 300);
+		g.drawString("  checkerboard ", 100, 400);
+		g.drawString(" that is flashing", 100, 500);
+		g.drawString(" random colors  ", 100, 600);
+		g.drawString("  at sixty frames ", 100, 700);
+		g.drawString("     per second.", 100, 800);
+		}
+	}
+
+	public static synchronized void playSound(final String url)
+	{
+		
+		new Thread(new Runnable() {
+			public void run() {
+				try{
+					
+					Clip clip = AudioSystem.getClip();
+					AudioInputStream inputStream = AudioSystem.getAudioInputStream(Main.class.getResourceAsStream(url));
+					clip.open(inputStream);
+					clip.start();
+				}
+				catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
+		}
+	}).start();
+}
+			
+	}
+
